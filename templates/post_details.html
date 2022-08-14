@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="blog-posts grid-system">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="all-blog-posts">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="blog-post">
+                  <div class="blog-thumb">
+                    <img src="{{blog.Banner.url}}" alt="">
+                  </div>
+                  <div class="down-content">
+                    <span>{{blog.category}}</span>
+                    <a href="{%url 'blog_datails' blog.slug%}"><h4>{{blog.title}}</h4></a>
+                    <ul class="post-info">
+                      <li><a href="#">{{blog.user.username}}</a></li>
+                      <li><a href="#">{{blog.created}}</a></li>
+                      <li><a href="#">{{blog.blog_comment.count}}Comments</a></li>
+                    </ul>
+                    <p>{{blog.description|safe}}</p>
+                    <div class="post-options">
+                      <div class="row">
+                        <div class="col-6">
+                          <ul class="post-tags">
+                            {% for tag  in blog.tags.all  %}
+                            <li><i class="fa fa-tags"></i></li>
+                            <li><a href="#">{{tag.title}}</a>,</li>
+                        
+                            {% endfor %}
+                          </ul>
+                        </div>
+                        {% if request.user.is_authenticated %}
+                        <div class="col-6">
+                          <ul class="post-share">
+                            <li id = "color_heart_count" class = "pl-3 pr-3">{{blog.likes.count}}</li>
+                            {% if liked_by %} 
+
+                            <li class = "pl-3 pr-3"><a href="javascript:void(0)"><i id = "color_heart" data-blog = "{{blog.id}}" class= "fa fa-heart heart_color empty-heart  "></i></a></li>
+                            {% else %}
+                            
+                            <li class = "pl-3 pr-3"><a href="javascript:void(0)"><i id = "color_heart" data-blog = "{{blog.id}}" class= "fa fa-heart empty-heart "></i></a></li>
+
+                            {% endif %}
+                         
+                            <li><i class="fa fa-share-alt"></i></li>
+                            <li><a href="#">Facebook</a>,</li>
+                            <li><a href="#"> Twitter</a></li>
+                          </ul>
+                        </div>
+                        {% else %}
+                        <div class="col-6">
+                          <ul class="post-share">
+                            <li id = "color_heart_count" class = "pl-3 pr-3">{{blog.likes.count}}</li>
+                          <li class = "pl-3 pr-3"><a href="{%url 'index'%}"><i id = "color_heart" data-blog = "{{blog.id}}" class= "fa fa-heart empty-heart"></i></a></li>
+                            <li><i class="fa fa-share-alt"></i></li>
+                            <li><a href="#">Facebook</a>,</li>
+                            <li><a href="#"> Twitter</a></li>
+                          </ul>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <div class="sidebar-item comments">
+                  <div class="sidebar-heading">
+                    <h2>{{blog.blog_comment.count}} comments</h2>
+                  </div>
+                  <div class="content">
+                    <ul class="d-flex flex-column">
+                      {% for comment  in blog.blog_comment.all  %}
+                      <li>
+                        
+                        <div class="author-thumb">
+                          <img src="{{comment.user.get_profile_image}}" alt="">
+                        </div>
+                        <div class="right-content">
+                          <h4>{{comment.user.username}}<span>{{comment.created_at}}</span></h4>
+                          <p>{{comment.text}}</p>
+                          <form id="comment" action="{%url 'replay' comment.id blog.id%}" method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                              
+                              <div class="col-lg-12">
+                                <fieldset>
+                                  <textarea name="text" rows="3" cols="100" id="message" placeholder="Type your replay" required=""></textarea>
+                                </fieldset>
+                              </div>
+                              <div class="col-lg-12">
+                                <fieldset>
+                                  {% if request.user.is_authenticated %}
+                                  <button type="submit" id="form-submit" class="main-button replay-button">Replay</button>
+                                  {% else %}
+                                  <button type="submit" id="form-submit" class="main-button" href = "#">login to replay</button>
+                                  {% endif %}
+                                </fieldset>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </li>
+                      {% for replay in comment.replay_comment.all  %}
+                      <li class="replied">
+                        <div class="author-thumb">
+                          <img src="{{replay.user.get_profile_image}}" alt="">
+                        </div>
+                        <div class="right-content">
+                          <h4>{{replay.user.username}}<span>May 20, 2020</span></h4>
+                          <p>{{replay.text}}</p>
+                        </div>
+                      </li>
+                      {% endfor %}
+                      {% endfor %}
+                    
+                      
+                     
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-12">
+                <div class="sidebar-item submit-comment">
+                  <div class="sidebar-heading">
+                    <h2>Your comment</h2>
+                  </div>
+                  <div class="content">
+                    <form id="comment" action="#" method="POST">
+                      {% csrf_token %}
+                      <div class="row">
+                        
+                        <div class="col-lg-12">
+                          <fieldset>
+                            <textarea name="text" rows="6" id="message" placeholder="Type your comment" required=""></textarea>
+                          </fieldset>
+                        </div>
+                        <div class="col-lg-12">
+                          <fieldset>
+                            {% if request.user.is_authenticated %}
+                            <button type="submit" id="form-submit" class="main-button">Submit</button>
+                            {% else %}
+                            <button type="submit" id="form-submit" class="main-button" href = "#">login to Comment</button>
+                            {% endif %}
+                          </fieldset>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="sidebar">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="sidebar-item search">
+                  <form id="search_form"  method="GET" action="{%url  'search'%}">
+                    <input type="text" name="search" class="searchText" placeholder="type to search..." >
+                  </form>
+                </div>
+              </div>
+            {% include 'sidebar.html' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+{% endblock content %}

@@ -1,0 +1,1 @@
+web: grunicorn blog.wsgi --log-file -

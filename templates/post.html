@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="blog-posts grid-system">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="all-blog-posts">
+            <div class="row">
+              {% for blog in blogs   %}
+              <div class="col-lg-6">
+                <div class="blog-post">
+                  <div class="blog-thumb">
+                    <img src="{{blog.Banner.url}}" alt="">
+                  </div>
+                  <div class="down-content">
+                    <span>{{blog.category}}</span>
+                    <a href="{% url 'blog_datails' blog.slug %}"><h4>{{blog.title}}</h4></a>
+                    <ul class="post-info">
+                      <li><a href="#">{{blog.user.username}}</a></li>
+                      <li><a href="#">{{blog.created}}</a></li>
+                      <li><a href="#">{{blog.blog_comment.count}}</a></li>
+                    </ul>
+                    <p>{{blog.description| truncatewords:10}}</p>
+                    <div class="post-options">
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <ul class="post-tags">
+                            {% if blog.tags.all.count > 0 %}
+                            {% for tag in blog.tags.all  %}
+                            <li><i class="fa fa-tags"></i></li>
+                            <li><a href="#">{{tag.title}}</a></li>
+                           {% endfor %}
+                           {% else %}
+                           <li><i class="fa fa-tags"></i></li>
+                           <li><a href="#">None</a></li>
+                            {% endif %}
+                            
+                            
+                           
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            
+             
+             {% include 'pagination.html' %}
+             
+             
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="sidebar">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="sidebar-item search">
+                  <form id="search_form" name="gs" method="GET" action="#">
+                    <input type="text" name="q" class="searchText" placeholder="type to search..." autocomplete="on">
+                  </form>
+                </div>
+              </div>
+             
+              {% include 'sidebar.html' %}
+              
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endblock %}

@@ -1,0 +1,48 @@
+
+<div class="col-lg-12">
+  <div class="sidebar-item recent-posts">
+    <div class="sidebar-heading">
+      <h2>Recent Posts</h2>
+    </div>
+    
+    <div class="content">
+      <ul>
+        {% for blog in blogs|slice:'3'  %}
+        <li><a href=" {% url 'blog_datails' blog.slug %} ">
+          <h5>{{blog.title}}</h5>
+          <span>{{blog.created}}</span>
+        </a></li>
+        {% endfor %}
+      </ul>
+    </div>
+   
+  </div>
+</div>
+<div class="col-lg-12">
+  <div class="sidebar-item categories">
+    <div class="sidebar-heading">
+      <h2>Categories</h2>
+    </div>
+    <div class="content">
+      <ul>
+        {% for category in categories|slice:'5' %}  
+        <li><a href="{%url "category_blog" category.slug %}">- {{category.title}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="col-lg-12">
+  <div class="sidebar-item tags">
+    <div class="sidebar-heading">
+      <h2>Tag Clouds</h2>
+    </div>
+    <div class="content">
+      <ul>
+        {% for tag in tags %}
+        <li><a href="{% url  'tags_blog' tag.slug %}">{{tag.title}}</a></li>
+        {% endfor %} 
+      </ul>
+    </div>
+  </div>
+</div>
