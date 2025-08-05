@@ -1,0 +1,40 @@
+services:
+  web:
+    container_name: blog_web
+    image: blog_web
+    ports:
+      - "8000:8000"
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    networks:
+      - blog_network
+  nginx:
+    container_name: blog_nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+    networks:
+      - blog_network
+  
+  certbot:
+    container_name: blog_certbot
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot -d tuhinblog.herokuapp.com --email your_email@example.com --agree-tos --no-eff-email
+    networks:
+      - blog_network
+
+
+
+networks:
+  blog_network:
+    driver: bridge
