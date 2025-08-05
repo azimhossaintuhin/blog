@@ -43,3 +43,4 @@ htmlcov/
 .mypy_cache/
 .dmypy.json
 .pyre/
+db.sqlite3
